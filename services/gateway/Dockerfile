@@ -1,13 +1,9 @@
-# Use Eclipse Temurin LTS JDK with Alpine for smallest footprint
-FROM eclipse-temurin:17-jdk-jammy
-
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 WORKDIR /app
 COPY . .
+RUN mvn clean package -DskipTests
 
-# Will be replaced with actual build commands later
-RUN echo "Gateway service placeholder" > /tmp/placeholder
-
-# Default Vert.x port
-EXPOSE 8080
-
-CMD ["sleep", "infinity"]
+FROM eclipse-temurin:17-jdk-jammy
+WORKDIR /app
+COPY --from=build /app/target/gateway-1.0.0.jar app.jar
+CMD ["java", "-jar", "app.jar"]

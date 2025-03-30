@@ -1,11 +1,13 @@
 services:
-  api-gateway:
-    image: ronda-rshim-game-backend_api-gateway
-    build: ./services/gateway
+  gateway:
+    image: ronda-rshim-game-backend_gateway
+    build:
+      context: ./services/gateway
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     depends_on:
-      - messaging
+      - nats
     networks:
       - game-network
 
@@ -15,13 +17,13 @@ services:
     ports:
       - "8081:8081"
     depends_on:
-      - messaging
+      - nats
     networks:
       - game-network
 
-  messaging:
-    image: ronda-rshim-game-backend_messaging
-    build: ./services/messaging
+  nats:
+    image: ronda-rshim-game-backend_nats
+    build: ./services/nats
     ports:
       - "4222:4222"
     networks:

@@ -1,14 +1,14 @@
 docker_compose('docker-compose.yml')
 
 docker_build(
-    'ronda-rshim-game-backend_api-gateway',
+    'ronda-rshim-game-backend_gateway',
     './services/gateway',
-    dockerfile='./services/gateway/Dockerfile',
+    dockerfile='./services/gateway/Dockerfile.dev',
     live_update=[
       sync("./services/gateway/src", "/app/src"),
-      # run(""),  # To restart process
+      run('echo "Triggering redeploy..."', trigger='./services/gateway/src'),
     ]
-) if os.path.exists('./services/gateway/Dockerfile') else local_resource('no-gateway-service', 'echo "No API Gateway service is set-up.\nPlease ensure you have the folder structure for the service under services/gateway/, with a Dockerfile."')
+) if os.path.exists('./services/gateway/Dockerfile.dev') else local_resource('no-gateway-service', 'echo "No API Gateway service is set-up.\nPlease ensure you have the folder structure for the service under services/gateway/, with a Dockerfile.dev file."')
 
 docker_build(
     'ronda-rshim-game-backend_game-engine',
@@ -18,17 +18,17 @@ docker_build(
       sync("./services/game-engine/src", "/app/src"),
       # run(""),  # To restart process
     ]
-) if os.path.exists('./services/game-engine/Dockerfile') else local_resource('no-game-engine-service', 'echo "No Game-Engine service is set-up.\nPlease ensure you have the folder structure for the service under services/game-engine/, with a Dockerfile."')
+) if os.path.exists('./services/game-engine/Dockerfile') else local_resource('no-game-engine-service', 'echo "No Game-Engine service is set-up.\nPlease ensure you have the folder structure for the service under services/game-engine/, with a Dockerfile.dev file."')
 
 docker_build(
-    'ronda-rshim-game-backend_messaging',
-    './services/messaging',
-    dockerfile='./services/messaging/Dockerfile',
+    'ronda-rshim-game-backend_nats',
+    './services/nats',
+    dockerfile='./services/nats/Dockerfile',
     live_update=[
-      sync("./services/messaging/src", "/app/src"),
+      sync("./services/nats/src", "/app/src"),
       # run(""),  # To restart process
     ]
-) if os.path.exists('./services/messaging/Dockerfile') else local_resource('no-messaging-service', 'echo "No Messaging service is set-up.\nPlease ensure you have the folder structure for the service under services/messaging, with a Dockerfile."')
+) if os.path.exists('./services/nats/Dockerfile') else local_resource('no-nats-service', 'echo "No Nats service is set-up.\nPlease ensure you have the folder structure for the service under services/nats, with a Dockerfile.dev file."')
 
 # Uncomment when ready to use Redis
 # docker_build(

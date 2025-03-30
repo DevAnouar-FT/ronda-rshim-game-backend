@@ -1,0 +1,5 @@
+FROM maven:3.9.9-eclipse-temurin-17
+WORKDIR /app
+COPY . .
+
+CMD ["mvn", "vertx:run", "-Dvertx.verticle=com.ronda_rshim.gateway.MainVerticle", "-Dredeploy=true", "-Dredeploy.includes=src/main/java/**/*.java"]
