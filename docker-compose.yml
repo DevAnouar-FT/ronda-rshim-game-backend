@@ -1,0 +1,40 @@
+services:
+  api-gateway:
+    image: ronda-rshim-game-backend_api-gateway
+    build: ./services/gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - messaging
+    networks:
+      - game-network
+
+  game-engine:
+    image: ronda-rshim-game-backend_game-engine
+    build: ./services/game-engine
+    ports:
+      - "8081:8081"
+    depends_on:
+      - messaging
+    networks:
+      - game-network
+
+  messaging:
+    image: ronda-rshim-game-backend_messaging
+    build: ./services/messaging
+    ports:
+      - "4222:4222"
+    networks:
+      - game-network
+
+  # redis:
+  #   image: ronda-rshim-game-backend_redis
+  #   build: ./services/redis
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - game-network
+
+networks:
+  game-network:
+    driver: bridge
